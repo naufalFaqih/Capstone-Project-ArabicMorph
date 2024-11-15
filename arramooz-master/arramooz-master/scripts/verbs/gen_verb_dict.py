@@ -11,7 +11,7 @@ import string
 import argparse
 import os
 
-#~ sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../support/'))
+sys.path.append(os.path.join(os.path.dirname(sys.argv[0]), '../support/'))
 import pyarabic.araby as araby
 from pyarabic.arabrepr import arepr
 from libqutrub.mosaref_main import get_future_form
