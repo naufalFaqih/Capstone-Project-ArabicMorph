@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qutrub API Response</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+      }
+      h1 {
+        color: #333;
+      }
+      input,
+      select,
+      button {
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 16px;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      #responseContainer {
+        margin-top: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Qutrub API Response</h1>
+    <input type="text" id="verb" placeholder="Masukkan kata kerja Arab" />
+    <select id="haraka">
+      <option value="">Pilih Haraka (opsional)</option>
+      <option value="a">a (فتحة)</option>
+      <option value="u">u (ضمة)</option>
+      <option value="i">i (كسرة)</option>
+    </select>
+    <select id="trans">
+      <option value="">Pilih Transitive (opsional)</option>
+      <option value="0">0 (لازم)</option>
+      <option value="1">1 (متعدي)</option>
+    </select>
+    <button id="fetchButton">Fetch API Response</button>
+    <div id="responseContainer">
+      <h2>Verb Info</h2>
+      <pre id="verbInfo"></pre>
+      <h2>Result</h2>
+      <table id="resultTable">
+        <thead>
+          <tr>
+            <th>madhi</th>
+            <th>mudhori</th>
+            <th>amar</th>
+          </tr>
+        </thead>
+        <tbody id="results"></tbody>
+      </table>
+      <h2>Suggestions</h2>
+      <table id="suggestionsTable">
+        <thead>
+          <tr>
+            <th>Verb</th>
+            <th>Future</th>
+          </tr>
+        </thead>
+        <tbody id="suggestions"></tbody>
+      </table>
+    </div>
+
+    <script>
+      document.getElementById('fetchButton').addEventListener('click', function () {
+        const verb = document.getElementById('verb').value;
+        const haraka = document.getElementById('haraka').value;
+        const trans = document.getElementById('trans').value;
+
+        let url = `http://127.0.0.1:5000/api/qutrub?verb=${encodeURIComponent(verb)}`;
+        if (haraka) {
+          url += `&haraka=${haraka}`;
+        }
+        if (trans) {
+          url += `&trans=${trans}`;
+        }
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            // Menampilkan verb_info
+            document.getElementById('verbInfo').textContent = data.verb_info;
+
+            // Menampilkan suggestions dalam bentuk tabel
+            const suggestionsContainer = document.getElementById('suggestions');
+            suggestionsContainer.innerHTML = ''; // Mengosongkan kontainer
+            data.suggest.forEach((suggestion) => {
+              const row = document.createElement('tr');
+              const verbCell = document.createElement('td');
+              const futureCell = document.createElement('td');
+              verbCell.textContent = suggestion.verb;
+              futureCell.textContent = suggestion.future;
+              row.appendChild(verbCell);
+              row.appendChild(futureCell);
+              suggestionsContainer.appendChild(row);
+            });
+
+            // menampilkan result dalam bentuk tabel
+            const resultContainer = document.getElementById('results');
+            resultContainer.innerHTML = ''; // Mengosongkan kontainer
+
+            const row = document.createElement('tr');
+            const madhiCell = document.createElement('td');
+            const mudhoriCell = document.createElement('td');
+            const amarCell = document.createElement('td');
+            madhiCell.textContent = data.result['9']['1'];
+            mudhoriCell.textContent = data.result['9']['2'];
+            amarCell.textContent = data.result['3']['6'];
+            row.appendChild(madhiCell);
+            row.appendChild(mudhoriCell);
+            row.appendChild(amarCell);
+            resultContainer.appendChild(row);
+          })
+          .catch((error) => {
+            console.error('Error fetching the API:', error);
+          });
+      });
+    </script>
+  </body>
+</html>
