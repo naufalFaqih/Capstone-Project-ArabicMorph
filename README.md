@@ -25,6 +25,18 @@ It also provides additional harokat (diacritical marks) using the **Qutrub API**
 
 ---
 
+## Model for Verb Conjugator
+
+### Base URL
+
+For model Verb Conjugator can access in:
+
+```
+https://github.com/cindymustika/Capstone-Project/tree/main
+```
+
+---
+
 ## API Usage
 
 ### Base URL
@@ -33,4 +45,16 @@ All API endpoints are accessible via:
 
 ```
 https://github.com/sxzrr/Arabic-Morph-API
+```
+
+---
+
+## App Mobile
+
+### Base URL
+
+For App can access in:
+
+```
+https://github.com/frnadaln/CapstoneProject
 ```
